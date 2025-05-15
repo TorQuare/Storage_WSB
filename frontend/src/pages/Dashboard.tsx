@@ -17,6 +17,7 @@ const Dashboard = () => {
     const [location, setLocation] = useState('')
     const [error, setError] = useState('')
     const navigate = useNavigate()
+    const [editingProduct, setEditingProduct] = useState<Product | null>(null)
 
     const fetchProducts = async () => {
         const token = localStorage.getItem('access')
@@ -69,10 +70,32 @@ const Dashboard = () => {
         }
     }
 
+    const handleDelete = async (id:number) => {
+        const token = localStorage.getItem('access')
+        try {
+            await axios.delete(`http://127.0.0.1:8000/api/products/${id}/`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            setProducts(products.filter((p) => p.id !==id))
+        } catch (err) {
+            console.error("Delete failure", err)
+        }
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem('access')
+        localStorage.removeItem('refresh')
+        navigate('/')
+    }
+
     return (
         <div style={{ maxWidth: 600, margin: '2rem auto' }}>
             <h2>Storage</h2>
-
+            <button onClick={() => handleLogout()} style={{ float: 'right' }}>
+            Wyloguj
+            </button>
             <form onSubmit={handleAdd} style={{ marginBottom: '1rem' }}>
             <div>
                 <label>Name:</label>
@@ -106,10 +129,109 @@ const Dashboard = () => {
         </form>
 
         {error && <p style={{ color: 'red' }}>{error}</p>}
+
+        {editingProduct && (
+  <form
+    onSubmit={async (e) => {
+      e.preventDefault()
+      const token = localStorage.getItem('access')
+
+      try {
+        const res = await axios.put(
+          `http://127.0.0.1:8000/api/products/${editingProduct.id}/`,
+          {
+            name: editingProduct.name,
+            quantity: editingProduct.quantity,
+            location: editingProduct.location,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+
+        setProducts(
+          products.map((p) => (p.id === editingProduct.id ? res.data : p))
+        )
+        setEditingProduct(null)
+      } catch (err) {
+        console.error('Błąd przy edytowaniu produktu:', err)
+      }
+    }}
+    style={{ marginBottom: '2rem' }}
+  >
+    <h3>Edytuj produkt</h3>
+    <input
+      type="text"
+      value={editingProduct.name}
+      onChange={(e) =>
+        setEditingProduct({ ...editingProduct, name: e.target.value })
+      }
+      required
+    />
+    <input
+      type="number"
+      value={editingProduct.quantity}
+      onChange={(e) =>
+        setEditingProduct({
+          ...editingProduct,
+          quantity: parseInt(e.target.value),
+        })
+      }
+      required
+    />
+    <input
+      type="text"
+      value={editingProduct.location}
+      onChange={(e) =>
+        setEditingProduct({ ...editingProduct, location: e.target.value })
+      }
+      required
+    />
+    <button type="submit">Zapisz</button>
+    <button
+      type="button"
+      onClick={() => setEditingProduct(null)}
+      style={{ marginLeft: '0.5rem' }}
+    >
+      Anuluj
+    </button>
+  </form>
+)}
+
         <ul>
             {products.map((p) => (
                 <li key={p.id}>
                     {p.name} - {p.quantity} szt. - {p.location}
+                    <button
+                        onClick={() => handleDelete(p.id)}
+                        style={{
+                        marginLeft: '1rem',
+                        backgroundColor: '#e74c3c',
+                        color: 'white',
+                        border: 'none',
+                        padding: '0.2rem 0.5rem',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        }}
+                    >
+                        Usuń
+                    </button>
+                    <button
+                        onClick={() => setEditingProduct(p)}
+                        style={{
+                            marginLeft: '0.5rem',
+                            backgroundColor: '#3498db',
+                            color: 'white',
+                            border: 'none',
+                            padding: '0.2rem 0.5rem',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        Edytuj
+                    </button>
                 </li>
             ))}
         </ul>
