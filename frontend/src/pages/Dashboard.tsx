@@ -136,6 +136,147 @@ const Dashboard = () => {
     }
 
     return (
+        <div className="container py-4">
+            <h1 className="mb-4">Magazyn</h1>
+            <button onClick={() => handleLogout()} style={{ float: 'right' }}>
+                Wyloguj
+            </button>
+
+            <form onSubmit={handleAddProduct} style={{ marginBottom: '2rem' }}>
+                <h3>Dodaj produkt</h3>
+                <input
+                    placeholder="Nazwa"
+                    value={newProduct.name}
+                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                    required
+                />
+                <input
+                    placeholder="Ilość"
+                    type="number"
+                    value={newProduct.quantity}
+                    onChange={(e) =>
+                        setNewProduct({ ...newProduct, quantity: parseInt(e.target.value) })
+                    }
+                    required
+                />
+                <input
+                    placeholder="Lokalizacja"
+                    value={newProduct.location}
+                    onChange={(e) => setNewProduct({ ...newProduct, location: e.target.value })}
+                    required
+                />
+                <button type="submit">Dodaj</button>
+            </form>
+            <table className="table table-bordered table-hover">
+                <thead className="table-light">
+                    <tr>
+                    <th>ID</th>
+                    <th>Nazwa</th>
+                    <th>Ilość</th>
+                    <th>Lokalizacja</th>
+                    <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {products.map((product) => (
+                    <tr key={product.id}>
+                        <td>{product.id}</td>
+                        <td>{product.name}</td>
+                        <td>{product.quantity}</td>
+                        <td>{product.location}</td>
+                        <td>
+                        <button
+                            className="btn btn-sm btn-warning me-2"
+                            onClick={() => setEditingProduct(product)}
+                        >
+                            Edytuj
+                        </button>
+                        <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => handleDelete(product.id)}
+                        >
+                            Usuń
+                        </button>
+                        </td>
+                    </tr>
+                    ))}
+                </tbody>
+            </table>
+            
+            <Modal
+                isOpen={!!editingProduct}
+                onRequestClose={() => setEditingProduct(null)}
+                className="Modal d-block" // d-block żeby zadziałały klasy Bootstrapa
+                overlayClassName="Overlay"
+                contentLabel="Edycja produktu"
+                style={{
+                content: {
+                    maxWidth: '400px',
+                    maxHeight: '400px',
+                    margin: 'auto',
+                    padding: '2rem',
+                    borderRadius: '10px',
+                },
+                }}
+                >
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Edytuj produkt</h5>
+                        <button type="button" className="btn-close" onClick={() => setEditingProduct(null)}></button>
+                    </div>
+                    {editingProduct && (
+                        <>
+                            <div className="modal-body">
+                                <div className="mb-3">
+                                <label className="form-label">Nazwa</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={editingProduct.name}
+                                    onChange={(e) => setEditingProduct({...editingProduct, name: e.target.value})}
+                                />
+                                </div>
+                                <div className="mb-3">
+                                <label className="form-label">Ilość</label>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    value={editingProduct.quantity}
+                                    onChange={(e) => setEditingProduct({...editingProduct, quantity:parseInt(e.target.value)})}
+                                />
+                                </div>
+                                <div className="mb-3">
+                                <label className="form-label">Lokalizacja</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={editingProduct.location}
+                                    onChange={(e) => setEditingProduct({...editingProduct, location:e.target.value})}
+                                />
+                                </div>
+                            </div>
+                        </>
+                    )}
+                    
+                    <div className="modal-footer">
+                        <button className="btn btn-secondary" onClick={() => setEditingProduct(null)}>
+                        Anuluj
+                        </button>
+                        <button className="btn btn-primary" onClick={handleEditSave}>
+                        Zapisz
+                        </button>
+                    </div>
+                    </div>
+                </div>
+                </Modal>        
+
+        </div>
+        
+    )
+
+    /*
+    return (
     <div style={{ maxWidth: 600, margin: '2rem auto', fontFamily: 'Arial' }}>
         <h2>Storage</h2>
         <button onClick={() => handleLogout()} style={{ float: 'right' }}>
@@ -254,6 +395,8 @@ const Dashboard = () => {
         </Modal>
         </div>
     )
+    */
     }
+    
 
 export default Dashboard

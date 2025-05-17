@@ -8,12 +8,13 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.126",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
     "axios": "^1.9.0",
+    "bootstrap": "^5.3.6",
     "idb": "^8.0.3",
     "react": "^19.1.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",
     "react-modal": "^3.16.3",
     "react-router-dom": "^6.30.0",
@@ -46,6 +47,12 @@
     ]
   },
   "devDependencies": {
-    "@types/react-modal": "^3.16.3"
+    "@types/node": "^20.17.47",
+    "@types/react-modal": "^3.16.3",
+    "vite-plugin-pwa": "^1.0.0",
+    "workbox-core": "^7.3.0",
+    "workbox-precaching": "^7.3.0",
+    "workbox-routing": "^7.3.0",
+    "workbox-strategies": "^7.3.0"
   }
 }

@@ -27,6 +27,38 @@ const Login = () => {
     }
 
     return (
+        <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+            <div className="card shadow p-4" style={{ width: '24rem' }}>
+            <h2 className="text-center mb-4">Logowanie</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                <label className="form-label">Nazwa użytkownika</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                </div>
+                <div className="mb-3">
+                <label className="form-label">Hasło</label>
+                <input
+                    type="password"
+                    className="form-control"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                </div>
+                <button type="submit" className="btn btn-primary w-100">
+                Zaloguj
+                </button>
+            </form>
+            </div>
+        </div>
+)
+
+    /*
+    return (
         <div style={{maxWidth: 400, margin: '2rem auto'}}>
             <h2>Logowanie</h2>
             <form onSubmit={handleSubmit}>
@@ -56,6 +88,7 @@ const Login = () => {
             </p>
         </div>
     )
+    */
 }
 
 export default Login
